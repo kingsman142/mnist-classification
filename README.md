@@ -26,6 +26,7 @@ Initial hyperparameters were as follows:
 * Greyscale images (1 input channel instead of 3 like RGB)
 
 **Baseline**
+
 There is no model for this, but since it's a 10-way classification task (10 digits), a non-trained model with random weights should achieve around 10% accuracy.
 
 **Vanilla**
@@ -47,6 +48,7 @@ nn.Linear(in_features = 84, out_features = 10, bias = True)
 ```
 
 **Normalization**
+
 Standardization was already used when reading in images, which basically converts all pixels values from the range [0, 255] to [0, 1]. However, normalization was introduced in this model with mean 0.5 and standard deviation 0.5, further transforming the values from [0, 1] to [-1, 1] and changing the values from a uniform distribution to a gaussian (Normal) distribution. The accuracy improved from 97.25% to 97.98%. The code to implement this was a one-liner:
 
 ```
@@ -94,15 +96,16 @@ To compare all these models and their accuracies, please view the results in the
 
 It is important to note all model accuracies are an average after 5 simulations, so the standard deviation of their accuracies should be relatively low. All models are in ascending order of trial and accuracy. Names are taken from the Approach section for brevity.
 
-**Model** | **Accuracy**
-Baseline | 10%
-Vanilla | 97.25%
-Normalization | 97.98%
-Batch 64 | 98.36%
-Batch 32 | 98.48%
-0.0005 Learning rate | 98.73%
-Deeper architecture | 99.05%
-0.001 Learning rate | **99.2%**
+| **Model** | **Accuracy** |
+|-----------|--------------|
+| Baseline | 10% |
+| Vanilla | 97.25% |
+| Normalization | 97.98% |
+| Batch 64 | 98.36% |
+| Batch 32 | 98.48% |
+| 0.0005 Learning rate | 98.73% |
+| Deeper architecture | 99.05% |
+| 0.001 Learning rate | **99.2%** |
 
 ## Failed Ideas
 
