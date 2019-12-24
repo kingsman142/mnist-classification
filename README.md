@@ -29,7 +29,9 @@ Initial hyperparameters were as follows:
 There is no model for this, but since it's a 10-way classification task (10 digits), a non-trained model with random weights should achieve around 10% accuracy.
 
 **Vanilla**
+
 This model is identical to LeNet, introduced by Yann LeCun and gang ( http://yann.lecun.com/exdb/publis/pdf/lecun-01a.pdf ) back in the 90s. I used all the initial hyperparameters defined above. It achieves an accuracy of 97.25%. The architecture was as follows:
+
 ```
 nn.Conv2d(in_channels = 1, out_channels = 6, kernel_size = (5, 5), stride = 1),
 nn.Tanh(),
@@ -46,21 +48,27 @@ nn.Linear(in_features = 84, out_features = 10, bias = True)
 
 **Normalization**
 Standardization was already used when reading in images, which basically converts all pixels values from the range [0, 255] to [0, 1]. However, normalization was introduced in this model with mean 0.5 and standard deviation 0.5, further transforming the values from [0, 1] to [-1, 1] and changing the values from a uniform distribution to a gaussian (Normal) distribution. The accuracy improved from 97.25% to 97.98%. The code to implement this was a one-liner:
+
 ```
 transforms.Normalize((0.5,), (0.5,))
 ```
 
 **Batch 64**
+
 I reduced the batch size from 128 to 64. I figured this might help the network produce more precise/granular weight updates. It made a decent improvement from 97.98% accuracy to 98.36% accuracy.
 
 **Batch 32**
+
 I further reduced the batch size from 64 to 32 for the same reason. While there was marginal increase in accuracy, there was still about a 0.12% increase, which is decent since we're already at such a high accuracy and we're trying to squeeze out the final 2% to get up to 100%. I suspect reducing the batch size even further will create weight updates that are too granular and will lead to overfitting on the rather large training set of 60k images, so I stop at a batch size of 32. The accuracy is now 98.48%.
 
 **0.0005 Learning rate**
+
 The learning rate is increased from 0.0002 to 0.0005 just to test if a 2.5x increase in learning rate would lead to improvements. Turns out, it led to a decent improvement from 98.48% to 98.73% accuracy.
 
 **Deeper architecture**
+
 At this point, any changes being made lead to such marginal increase in accuracy. As such, I decided to change up the architecture. I switched out average pooling layers for max pooling layers (observed a lot, empirically, in vision research), reduced stride in pooling layers (generates denser descriptors for the image later on), reduced the kernel size in the convolutional layers (leads to finer-grained features), and transitioned from tanh to relu activations (generally lead to faster convergence and no risk of saturation). The accuracy increased from 98.73% to 99.05% and the model is seen as follows:
+
 ```
 nn.Conv2d(in_channels = 1, out_channels = 32, kernel_size = (3, 3)),
 nn.ReLU(),
@@ -77,6 +85,7 @@ nn.Linear(in_features = 100, out_features = 10, bias = True)
 ```
 
 **0.001 Learning rate**
+
 Finally, I've exhausted nearly all hyperparameters, so I decided to switch out the Adam optimizer for an SGD optimizer with momentum as it generally has better convergence (again, this is taken from empirical observations in research papers). A learning rate of 0.001 and momentum of 0.9 were utilized for this update. The final accuracy achieved was 99.2%, which is about as good as we'll get. The de facto "leaderboard" of the best models on MNIST are located at http://yann.lecun.com/exdb/mnist/ . Most models that are better than the model produced in this repository are either several layers deeper, an ensemble of many neural networks, or require additional preprocessing of the dataset, which I'm not really interested in doing here.
 
 To compare all these models and their accuracies, please view the results in the next section.
