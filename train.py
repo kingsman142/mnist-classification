@@ -1,3 +1,4 @@
+import os
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -62,7 +63,7 @@ for epoch in range(args.num_epochs):
 
         # log info for the user
         if batch_id % 10 == 0:
-            print("(train) => Epoch {}/{} - Batch {}/{} - Loss: {}".format(epoch, args.num_epochs, batch_id, len(train_loader), loss.item()))
+            print("(train) => Epoch {}/{} - Batch {}/{} - Loss: {}".format(epoch+1, args.num_epochs, batch_id, len(train_loader), loss.item()))
 
 # test the model
 correct = 0
@@ -84,3 +85,11 @@ for batch_id, sample in enumerate(test_loader):
         print("(test) => Batch {}/{}".format(batch_id, len(test_loader)))
 test_accuracy = correct / len(mnist_test)
 print("Test accuracy: {}%".format(round(test_accuracy * 100.0, 2)))
+
+# save the model
+model_path = os.path.join("models", "mnist_model")
+if not os.path.isdir("models"):
+    os.mkdir("models")
+if os.path.exists(model_path): # remove previously saved model
+    os.remove(model_path)
+torch.save(model.state_dict(), model_path)

@@ -11,7 +11,11 @@ To download and train the model to replicate this code, it's a very simple two-l
 ```
 pip3 install -r requirements.txt
 python3 train.py --num-epochs 10 --learning-rate 0.001 --batch-size 32
+(optional) python3 visualize_classes.py
 ```
+
+NOTE: `visualize_classes.py` produces T-SNE plots for the digits before and after training the model
+NOTE: With a Tesla K80 GPU (obtained on Google Colab), this model takes about 2 minutes to train
 
 ## Approach
 I use PyTorch to implement everything, and all I needed was 3 files to do so. In `model.py`, the classifier (a CNN) is built. In `utils.py`, command-line arguments are parsed to setup hyperparameters for the model. Finally, `train.py` handles loading the data (MNIST dataset), as well as training and evaluating the model. The model is modified 5 different times, and each modification is described in chronological order of how I chose to implement them, along with the improved accuracy of the model. All models were trained for 10 epochs with the standard MNIST split of 60k training and 10k testing images. No validation set was used in the training of this model, as it can be trained fairly quickly even without a GPU on a standard laptop. All evaluated models have a specific name which are used in the Results section below:
