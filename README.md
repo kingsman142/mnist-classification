@@ -15,6 +15,7 @@ python3 train.py --num-epochs 10 --learning-rate 0.001 --batch-size 32
 ```
 
 NOTE: `visualize_classes.py` produces T-SNE plots for the digits before and after training the model
+
 NOTE: With a Tesla K80 GPU (obtained on Google Colab), this model takes about 2 minutes to train
 
 ## Approach
