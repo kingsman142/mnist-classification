@@ -14,9 +14,11 @@ python3 train.py --num-epochs 10 --learning-rate 0.001 --batch-size 32
 (optional) python3 visualize_classes.py
 ```
 
-NOTE: `visualize_classes.py` produces T-SNE plots for the digits before and after training the model
+**NOTE**: `visualize_classes.py` produces T-SNE plots for the digits before and after training the model
 
-NOTE: With a Tesla K80 GPU (obtained on Google Colab), this model takes about 2 minutes to train
+**NOTE**: With a Tesla K80 GPU (obtained on Google Colab), this model takes about 2 minutes to train
+
+**NOTE**: A pre-trained model is provided in the models/ folder labeled "mnist_model"
 
 ## Approach
 I use PyTorch to implement everything, and all I needed was 3 files to do so. In `model.py`, the classifier (a CNN) is built. In `utils.py`, command-line arguments are parsed to setup hyperparameters for the model. Finally, `train.py` handles loading the data (MNIST dataset), as well as training and evaluating the model. The model is modified 5 different times, and each modification is described in chronological order of how I chose to implement them, along with the improved accuracy of the model. All models were trained for 10 epochs with the standard MNIST split of 60k training and 10k testing images. No validation set was used in the training of this model, as it can be trained fairly quickly even without a GPU on a standard laptop. All evaluated models have a specific name which are used in the Results section below:
@@ -111,6 +113,16 @@ It is important to note all model accuracies are an average after 5 simulations,
 | 0.0005 Learning rate | 98.73% |
 | Deeper architecture | 99.05% |
 | 0.001 Learning rate | **99.2%** |
+
+## Visualizations
+
+To wrap up this report and supplement the quantitative evaluations, qualitative evaluation was performed to verify the above results. These qualitative evaluations came in the form of t-SNE plots ( introduced in http://www.jmlr.org/papers/volume9/vandermaaten08a/vandermaaten08a.pdf ). This technique is an iterative, non-linear technique for dimensionality reduction, which is slightly different from PCA, which is a closed-form, linear dimensionality reduction technique. In practice, PCA can be utilized before t-SNE to reduce the time complexity (t-SNE can be O(NlogN) or O(N^2) depending on the method), but since the raw images were 28x28 (784 features/pixels), and the last fully connected layer of our model outputs 100 features, the time complexity is not much of a concern in this project. Below are two t-SNE plots. The first plot contains the visualization of 1000 samples across all 10 classes (different colors indicate different classes) from a roughly uniform distribution before passing the images through a model. The second plot contains the visualization after passing the images through a model with randomly initialized weights and after extracting the 100 features from the last fully connected layer in the model. Finally, the third plot displays the t-SNE plot of the 100 image features extracted from the last fully connected layer of a fully trained model obtaining 99.2% accuracy on the task. Please note there was an attempt made to add legends to the plots for all the classes, but there was no easy, straightforward manner to do so in matplotlib that I found, so I decided to skip that technical implementation. While it would be nice, it really is not necessary to understand the usefulness of the plots.
+
+![MNIST dataset t-SNE plot with raw image features](plots/vanilla-mnist-tsne.png)
+![MNIST dataset t-SNE plot with non-trained model features](plots/nontrained-model-mnist-tsne.png)
+![MNIST dataset t-SNE plot with pre-trained model features](plots/pretrained-model-mnist-tsne.png)
+
+As one may observe, the raw images are relatively scattered, but there is definitely some class separation. So, the raw images have medium-high intra-class variability and low-medium inter-class separability. In the second plot, we observe the classes are separated a bit more, but the variability has not changed significantly. In this case, the image features have medium-high intra-class variability and medium inter-class separability. Finally, with the fully trained model, the classes are almost completely separated in tight clusters, with minimal exceptions throughout the plot. This plot is best described as having low intra-class variability and high inter-class separability, which is the ideal case. As such, the natural conclusion is the trained model utilized for this task significantly helps with separability across all 10 classes.
 
 ## Failed Ideas
 
